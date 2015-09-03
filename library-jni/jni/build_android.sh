@@ -363,24 +363,24 @@ build_ass
 build_ffmpeg
 build_one
 
-#mips
-EABIARCH=mipsel-linux-android
-ARCH=mips
-OPTIMIZE_CFLAGS="-EL -march=mips32 -mips32 -mhard-float"
-PREFIX=$(pwd)/ffmpeg-build/mips
-OUT_LIBRARY=$PREFIX/libffmpeg.so
-ADDITIONAL_CONFIGURE_FLAG="--disable-mips32r2"
-SONAME=libffmpeg.so
-PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-9
-setup_paths
-build_amr
-build_aac
-build_fribidi
-build_freetype2
-build_ass
-build_ffmpeg
-build_one
+# #mips
+# EABIARCH=mipsel-linux-android
+# ARCH=mips
+# OPTIMIZE_CFLAGS="-EL -march=mips32 -mips32 -mhard-float"
+# PREFIX=$(pwd)/ffmpeg-build/mips
+# OUT_LIBRARY=$PREFIX/libffmpeg.so
+# ADDITIONAL_CONFIGURE_FLAG="--disable-mips32r2"
+# SONAME=libffmpeg.so
+# PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+# PLATFORM_VERSION=android-9
+# setup_paths
+# build_amr
+# build_aac
+# build_fribidi
+# build_freetype2
+# build_ass
+# build_ffmpeg
+# build_one
 
 #arm v7vfpv3
 EABIARCH=arm-linux-androideabi
