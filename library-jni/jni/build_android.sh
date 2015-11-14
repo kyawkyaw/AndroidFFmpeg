@@ -239,6 +239,10 @@ function build_ffmpeg
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_dxva2 \
 	    --enable-hwaccel=mpeg4_vaapi \
+	    --enable-filter=aformat \
+	    --enable-filter=amerge \
+	    --enable-filter=aresample \
+	    --enable-filter=volume \
         --enable-demuxer=aac \
         --enable-demuxer=ac3 \
         --enable-demuxer=ape \
@@ -340,6 +344,7 @@ function build_ffmpeg
 	    --enable-hwaccels \
 	    --enable-muxers \
 	    --enable-avformat \
+	    --enable-avfilter \
 	    --enable-avcodec \
 	    --enable-avresample \
 	    --enable-zlib \
@@ -349,7 +354,6 @@ function build_ffmpeg
 	    --disable-ffplay \
 	    --disable-ffprobe \
 	    --disable-ffserver \
-	    --disable-avfilter \
 	    --disable-avdevice \
 	    --enable-nonfree \
 	    --enable-version3 \
