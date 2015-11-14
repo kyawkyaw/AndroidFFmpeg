@@ -239,10 +239,6 @@ function build_ffmpeg
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_dxva2 \
 	    --enable-hwaccel=mpeg4_vaapi \
-	    --enable-filter=aformat \
-	    --enable-filter=amerge \
-	    --enable-filter=aresample \
-	    --enable-filter=volume \
         --enable-demuxer=aac \
         --enable-demuxer=ac3 \
         --enable-demuxer=ape \
@@ -359,6 +355,7 @@ function build_ffmpeg
 	    --enable-version3 \
 	    --enable-memalign-hack \
 	    --enable-asm \
+	    --enable-filters \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
 	make -j4 install
@@ -371,7 +368,7 @@ function build_ffmpeg
 function build_one {
 	echo "Starting build one for $ARCH"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavformat -lavresample -lavutil -lswresample -lass -lfreetype -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lass -lfreetype -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
 	echo "FINISHED one for $ARCH"
 }
