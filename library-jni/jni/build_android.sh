@@ -233,7 +233,6 @@ function build_ffmpeg
 	    --disable-everything \
 	    --enable-pthreads \
 	    --enable-libass \
-	    --enable-libvo-aacenc \
 	    --enable-libvo-amrwbenc \
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_vaapi \
