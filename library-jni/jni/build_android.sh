@@ -102,7 +102,9 @@ EOF
 
 function build_x264
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build x264 for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd x264
 	./configure --prefix=$PREFIX --host=$ARCH-linux --enable-static $ADDITIONAL_CONFIGURE_FLAG
 
@@ -110,12 +112,16 @@ function build_x264
 	make -j4 install
 	make clean
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED x264 for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 
 function build_amr
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build amr for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd vo-amrwbenc
 	./configure \
 	    --prefix=$PREFIX \
@@ -130,12 +136,16 @@ function build_amr
 	make -j4 install
 	make clean
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED amr for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 
 function build_aac
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build aac for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd vo-aacenc
 	./configure \
 	    --prefix=$PREFIX \
@@ -150,11 +160,15 @@ function build_aac
 	make -j4 install
 	make clean
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED aac for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 function build_freetype2
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build freetype2 for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd freetype2
 	./configure \
 	    --prefix=$PREFIX \
@@ -169,16 +183,21 @@ function build_freetype2
 	make -j4 install
 	make clean
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED freetype2 for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 function build_ass
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build ass for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd libass
 	./configure \
 	    --prefix=$PREFIX \
 	    --host=$ARCH-linux \
 	    --disable-fontconfig \
+	    --disable-require-system-font-provider \
 	    --disable-dependency-tracking \
 	    --disable-shared \
 	    --enable-static \
@@ -189,11 +208,15 @@ function build_ass
 	make V=1 -j4 install
 	make clean
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED ass for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 function build_fribidi
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build fribidi for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd fribidi
 	./configure \
 	    --prefix=$PREFIX \
@@ -209,11 +232,15 @@ function build_fribidi
 	make -j4 install
 	make clean
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED fribidi for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 function build_ffmpeg
 {
+	echo "***********************************************************************************************************************"
 	echo "Starting build ffmpeg for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd ffmpeg
 	./configure --target-os=linux \
 	    --prefix=$PREFIX \
@@ -243,7 +270,6 @@ function build_ffmpeg
         --enable-demuxer=ape \
         --enable-demuxer=asf \
         --enable-demuxer=flac \
-        --enable-demuxer=matroska_audio \
         --enable-demuxer=mp3 \
         --enable-demuxer=mpc \
         --enable-demuxer=mpc8 \
@@ -267,12 +293,10 @@ function build_ffmpeg
 	    --enable-muxer=mjpeg \
 	    --enable-muxer=matroska \
 	    --enable-protocol=crypto \
-	    --enable-protocol=jni \
 	    --enable-protocol=file \
 	    --enable-protocol=rtp \
 	    --enable-protocol=tcp \
 	    --enable-protocol=udp \
-	    --enable-protocol=applehttp \
 	    --enable-protocol=hls \
 	    --enable-protocol=http \
 	    --enable-decoder=xsub \
@@ -288,7 +312,6 @@ function build_ffmpeg
 	    --enable-decoder=mpeg4 \
 	    --enable-encoder=mpeg4 \
 	    --enable-decoder=h264 \
-	    --enable-encoder=h264 \
 	    --enable-decoder=aac \
 	    --enable-encoder=aac \
 	    --enable-parser=h264 \
@@ -319,13 +342,15 @@ function build_ffmpeg
         --enable-decoder=pcm_s16le \
         --enable-decoder=pcm_s16le_planar \
         --enable-decoder=pcm_s24be \
-        --enable-decoder=pcm_daud \
         --enable-decoder=pcm_s24le \
         --enable-decoder=pcm_s32be \
         --enable-decoder=pcm_s32le \
         --enable-decoder=pcm_s8 \
+        --enable-encoder=pcm_s8 \
         --enable-decoder=pcm_u16be \
+        --enable-encoder=pcm_u16be \
         --enable-decoder=pcm_u16le \
+        --enable-encoder=pcm_u16le \
         --enable-decoder=pcm_u24be \
         --enable-decoder=pcm_u24le \
 	    --enable-encoder=libvo_amrwbenc \
@@ -360,15 +385,21 @@ function build_ffmpeg
 	make clean
 
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED ffmpeg for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 
 function build_one {
+	echo "***********************************************************************************************************************"
 	echo "Starting build one for $ARCH"
+	echo "***********************************************************************************************************************"
 	cd ffmpeg
 	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lass -lfreetype -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
+	echo "***********************************************************************************************************************"
 	echo "FINISHED one for $ARCH"
+	echo "***********************************************************************************************************************"
 }
 
 # #arm v5
