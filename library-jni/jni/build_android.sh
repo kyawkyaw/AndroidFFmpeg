@@ -259,7 +259,6 @@ function build_ffmpeg
 	    --extra-cflags="-I$PREFIX/include" \
 	    --disable-everything \
 	    --enable-pthreads \
-	    --enable-libass \
 	    --enable-libvo-amrwbenc \
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_vaapi \
@@ -395,7 +394,7 @@ function build_one {
 	echo "Starting build one for $ARCH"
 	echo "***********************************************************************************************************************"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lass -lfreetype -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
 	echo "***********************************************************************************************************************"
 	echo "FINISHED one for $ARCH"
@@ -472,11 +471,11 @@ SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
 PLATFORM_VERSION=android-5
 setup_paths
-build_amr
-build_aac
-build_fribidi
-build_freetype2
-build_ass
+# build_amr
+# build_aac
+# build_fribidi
+# build_freetype2
+# build_ass
 build_ffmpeg
 build_one
 
