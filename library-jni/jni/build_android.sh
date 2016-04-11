@@ -401,25 +401,25 @@ function build_one {
 	echo "***********************************************************************************************************************"
 }
 
-# #arm v5
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv5
-# OPTIMIZE_CFLAGS="-marm -march=$CPU"
-# PREFIX=$(pwd)/ffmpeg-build/armeabi
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-5
-# setup_paths
-# build_amr
-# build_aac
-# build_fribidi
+#arm v5
+EABIARCH=arm-linux-androideabi
+ARCH=arm
+CPU=armv5
+OPTIMIZE_CFLAGS="-marm -march=$CPU"
+PREFIX=$(pwd)/ffmpeg-build/armeabi
+OUT_LIBRARY=$PREFIX/libffmpeg.so
+ADDITIONAL_CONFIGURE_FLAG=
+SONAME=libffmpeg.so
+PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-5
+setup_paths
+build_amr
+build_aac
+build_fribidi
 # build_freetype2
 # build_ass
-# build_ffmpeg
-# build_one
+build_ffmpeg
+build_one
 
 # #x86
 # EABIARCH=i686-linux-android
@@ -471,9 +471,9 @@ SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
 PLATFORM_VERSION=android-5
 setup_paths
-# build_amr
-# build_aac
-# build_fribidi
+build_amr
+build_aac
+build_fribidi
 # build_freetype2
 # build_ass
 build_ffmpeg
