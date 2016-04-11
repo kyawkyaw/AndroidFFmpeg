@@ -471,9 +471,9 @@ SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
 PLATFORM_VERSION=android-5
 setup_paths
-# build_amr
-# build_aac
-# build_fribidi
+build_amr
+build_aac
+build_fribidi
 # build_freetype2
 # build_ass
 build_ffmpeg
