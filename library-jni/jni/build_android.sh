@@ -261,7 +261,6 @@ function build_ffmpeg
 	    --enable-pthreads \
 	    --enable-libvo-amrwbenc \
 	    --enable-hwaccel=h264_vaapi \
-	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_dxva2 \
 	    --enable-hwaccel=mpeg4_vaapi \
         --enable-demuxer=aac \
@@ -311,6 +310,7 @@ function build_ffmpeg
 	    --enable-decoder=mpeg4 \
 	    --enable-encoder=mpeg4 \
 	    --enable-decoder=h264 \
+	    --enable-encoder=h264 \
 	    --enable-decoder=aac \
 	    --enable-encoder=aac \
 	    --enable-parser=h264 \
@@ -411,7 +411,7 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-5
+PLATFORM_VERSION=android-17
 setup_paths
 build_amr
 build_aac
@@ -430,7 +430,7 @@ build_one
 # ADDITIONAL_CONFIGURE_FLAG=--disable-asm
 # SONAME=libffmpeg.so
 # PREBUILT=$ANDROID_NDK_HOME/toolchains/x86-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-9
+# PLATFORM_VERSION=android-17
 # setup_paths
 # build_amr
 # build_aac
@@ -440,24 +440,6 @@ build_one
 # build_ffmpeg
 # build_one
 
-# #mips
-# EABIARCH=mipsel-linux-android
-# ARCH=mips
-# OPTIMIZE_CFLAGS="-EL -march=mips32 -mips32 -mhard-float"
-# PREFIX=$(pwd)/ffmpeg-build/mips
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG="--disable-mips32r2"
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-9
-# setup_paths
-# build_amr
-# build_aac
-# build_fribidi
-# build_freetype2
-# build_ass
-# build_ffmpeg
-# build_one
 
 #arm v7vfpv3
 EABIARCH=arm-linux-androideabi
@@ -469,7 +451,7 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-5
+PLATFORM_VERSION=android-17
 setup_paths
 build_amr
 build_aac
@@ -478,26 +460,6 @@ build_fribidi
 # build_ass
 build_ffmpeg
 build_one
-
-# #arm v7 + neon (neon also include vfpv3-32)
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv7-a
-# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -march=$CPU -mtune=cortex-a8 -mthumb -D__thumb__ "
-# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a-neon
-# OUT_LIBRARY=../ffmpeg-build/armeabi-v7a/libffmpeg-neon.so
-# ADDITIONAL_CONFIGURE_FLAG=--enable-neon
-# SONAME=libffmpeg-neon.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-9
-# setup_paths
-# build_amr
-# build_aac
-# build_fribidi
-# build_freetype2
-# build_ass
-# build_ffmpeg
-# build_one
 
 
 echo "BUILD SUCCESS"
