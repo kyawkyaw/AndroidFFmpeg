@@ -102,9 +102,9 @@ EOF
 
 function build_x264
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build x264 for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd x264
 	./configure --prefix=$PREFIX --host=$ARCH-linux --enable-static $ADDITIONAL_CONFIGURE_FLAG
 
@@ -112,16 +112,16 @@ function build_x264
 	make -j4 install
 	make clean
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED x264 for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 
 function build_amr
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build amr for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd vo-amrwbenc
 	./configure \
 	    --prefix=$PREFIX \
@@ -136,16 +136,16 @@ function build_amr
 	make -j4 install
 	make clean
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED amr for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 
 function build_aac
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build aac for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd vo-aacenc
 	./configure \
 	    --prefix=$PREFIX \
@@ -160,15 +160,15 @@ function build_aac
 	make -j4 install
 	make clean
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED aac for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 function build_freetype2
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build freetype2 for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd freetype2
 	./configure \
 	    --prefix=$PREFIX \
@@ -183,15 +183,15 @@ function build_freetype2
 	make -j4 install
 	make clean
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED freetype2 for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 function build_ass
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build ass for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd libass
 	./configure \
 	    --prefix=$PREFIX \
@@ -208,15 +208,15 @@ function build_ass
 	make V=1 -j4 install
 	make clean
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED ass for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 function build_fribidi
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build fribidi for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd fribidi
 	./configure \
 	    --prefix=$PREFIX \
@@ -232,15 +232,15 @@ function build_fribidi
 	make -j4 install
 	make clean
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED fribidi for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 function build_ffmpeg
 {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build ffmpeg for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd ffmpeg
 	./configure --target-os=linux \
 	    --prefix=$PREFIX \
@@ -258,7 +258,6 @@ function build_ffmpeg
 	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -L$PREFIX/lib" \
 	    --extra-cflags="-I$PREFIX/include" \
 	    --disable-everything \
-	    --enable-pthreads \
 	    --enable-libvo-amrwbenc \
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_dxva2 \
@@ -368,6 +367,7 @@ function build_ffmpeg
 	    --enable-avresample \
 	    --enable-zlib \
 	    --disable-doc \
+	    --disable-programs \
 	    --enable-ffmpeg \
 	    --disable-ffplay \
 	    --disable-ffprobe \
@@ -378,27 +378,33 @@ function build_ffmpeg
 	    --enable-memalign-hack \
 	    --enable-asm \
 	    --enable-filters \
+	    --disable-logging  \
+	    --enable-small  \
+	    --disable-pthreads \
+		--disable-w32threads \
+		--disable-os2threads \
+	    --disable-network \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
 	make -j4 install
 	make clean
 
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED ffmpeg for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 
 function build_one {
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "Starting build one for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
 	cd ..
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
-	echo "***********************************************************************************************************************"
+	echo "*******************************************************************************"
 }
 
 #arm v5
@@ -411,7 +417,7 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-17
+PLATFORM_VERSION=android-19
 setup_paths
 build_amr
 build_aac
@@ -430,7 +436,26 @@ build_one
 # ADDITIONAL_CONFIGURE_FLAG=--disable-asm
 # SONAME=libffmpeg.so
 # PREBUILT=$ANDROID_NDK_HOME/toolchains/x86-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-17
+# PLATFORM_VERSION=android-19
+# setup_paths
+# build_amr
+# build_aac
+# build_fribidi
+# # build_freetype2
+# # build_ass
+# build_ffmpeg
+# build_one
+
+# #mips
+# EABIARCH=mipsel-linux-android
+# ARCH=mips
+# OPTIMIZE_CFLAGS="-EL -march=mips32 -mips32 -mhard-float"
+# PREFIX=$(pwd)/ffmpeg-build/mips
+# OUT_LIBRARY=$PREFIX/libffmpeg.so
+# ADDITIONAL_CONFIGURE_FLAG="--disable-mips32r2"
+# SONAME=libffmpeg.so
+# PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+# PLATFORM_VERSION=android-19
 # setup_paths
 # build_amr
 # build_aac
@@ -439,7 +464,6 @@ build_one
 # build_ass
 # build_ffmpeg
 # build_one
-
 
 #arm v7vfpv3
 EABIARCH=arm-linux-androideabi
@@ -451,7 +475,7 @@ OUT_LIBRARY=$PREFIX/libffmpeg.so
 ADDITIONAL_CONFIGURE_FLAG=
 SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-17
+PLATFORM_VERSION=android-19
 setup_paths
 build_amr
 build_aac
@@ -460,6 +484,26 @@ build_fribidi
 # build_ass
 build_ffmpeg
 build_one
+
+# #arm v7 + neon (neon also include vfpv3-32)
+# EABIARCH=arm-linux-androideabi
+# ARCH=arm
+# CPU=armv7-a
+# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -march=$CPU -mtune=cortex-a8 -mthumb -D__thumb__ "
+# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a-neon
+# OUT_LIBRARY=../ffmpeg-build/armeabi-v7a/libffmpeg-neon.so
+# ADDITIONAL_CONFIGURE_FLAG=--enable-neon
+# SONAME=libffmpeg-neon.so
+# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+# PLATFORM_VERSION=android-19
+# setup_paths
+# build_amr
+# build_aac
+# build_fribidi
+# build_freetype2
+# build_ass
+# build_ffmpeg
+# build_one
 
 
 echo "BUILD SUCCESS"
