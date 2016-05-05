@@ -73,7 +73,7 @@ function setup_paths
 	export STRIP="${CROSS_COMPILE}strip"
 	export RANLIB="${CROSS_COMPILE}ranlib"
 	export AR="${CROSS_COMPILE}ar"
-	export LDFLAGS="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -nostdlib -lc -lm -ldl -llog"
+	export LDFLAGS="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -nostdlib -lc -lm -ldl -llog -lgcc"
 	export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig/
 	export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/
 
@@ -106,7 +106,12 @@ function build_x264
 	echo "Starting build x264 for $ARCH"
 	echo "*******************************************************************************"
 	cd x264
-	./configure --prefix=$PREFIX --host=$ARCH-linux --enable-static $ADDITIONAL_CONFIGURE_FLAG
+	./configure \
+		--prefix=$PREFIX \
+		--host=$ARCH-linux \
+		--disable-asm \
+	    --enable-static \
+		$ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
 	make -j4 install
@@ -309,7 +314,8 @@ function build_ffmpeg
 	    --enable-decoder=mpeg4 \
 	    --enable-encoder=mpeg4 \
 	    --enable-decoder=h264 \
-	    --enable-encoder=h264 \
+	    --enable-gpl \
+	    --enable-libx264 \
 	    --enable-decoder=aac \
 	    --enable-encoder=aac \
 	    --enable-parser=h264 \
@@ -400,7 +406,7 @@ function build_one {
 	echo "Starting build one for $ARCH"
 	echo "*******************************************************************************"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lx264 -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
@@ -419,6 +425,7 @@ SONAME=libffmpeg.so
 PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
 PLATFORM_VERSION=android-19
 setup_paths
+build_x264
 build_amr
 build_aac
 build_fribidi
@@ -438,6 +445,7 @@ build_one
 # PREBUILT=$ANDROID_NDK_HOME/toolchains/x86-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
 # PLATFORM_VERSION=android-19
 # setup_paths
+# # build_x264
 # build_amr
 # build_aac
 # build_fribidi
@@ -457,6 +465,7 @@ build_one
 # PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
 # PLATFORM_VERSION=android-19
 # setup_paths
+# # build_x264
 # build_amr
 # build_aac
 # build_fribidi
@@ -466,24 +475,25 @@ build_one
 # build_one
 
 #arm v7vfpv3
-EABIARCH=arm-linux-androideabi
-ARCH=arm
-CPU=armv7-a
-OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
-PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
-OUT_LIBRARY=$PREFIX/libffmpeg.so
-ADDITIONAL_CONFIGURE_FLAG=
-SONAME=libffmpeg.so
-PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-19
-setup_paths
-build_amr
-build_aac
-build_fribidi
-# build_freetype2
-# build_ass
-build_ffmpeg
-build_one
+# EABIARCH=arm-linux-androideabi
+# ARCH=arm
+# CPU=armv7-a
+# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
+# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
+# OUT_LIBRARY=$PREFIX/libffmpeg.so
+# ADDITIONAL_CONFIGURE_FLAG=
+# SONAME=libffmpeg.so
+# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+# PLATFORM_VERSION=android-19
+# setup_paths
+# # build_x264
+# # build_amr
+# # build_aac
+# # build_fribidi
+# # # build_freetype2
+# # # build_ass
+# # build_ffmpeg
+# build_one
 
 # #arm v7 + neon (neon also include vfpv3-32)
 # EABIARCH=arm-linux-androideabi

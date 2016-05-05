@@ -13,15 +13,9 @@
 [submodule "library-jni/jni/tropicssl"]
 	path = library-jni/jni/tropicssl
 	url = https://github.com/appunite/tropicssl.git
-[submodule "library-jni/jni/libass"]
-	path = library-jni/jni/libass
-	url = https://github.com/libass/libass.git
 [submodule "library-jni/jni/fribidi"]
 	path = library-jni/jni/fribidi
 	url = https://github.com/appunite/fribidi.git
-[submodule "library-jni/jni/freetype2"]
-	path = library-jni/jni/freetype2
-	url = http://git.savannah.gnu.org/cgit/freetype/freetype2.git
 [submodule "library-jni/jni/libyuv"]
 	path = library-jni/jni/libyuv
 	url = https://chromium.googlesource.com/external/libyuv
