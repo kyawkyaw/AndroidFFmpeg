@@ -169,54 +169,8 @@ function build_aac
 	echo "FINISHED aac for $ARCH"
 	echo "*******************************************************************************"
 }
-function build_freetype2
-{
-	echo "*******************************************************************************"
-	echo "Starting build freetype2 for $ARCH"
-	echo "*******************************************************************************"
-	cd freetype2
-	./configure \
-	    --prefix=$PREFIX \
-	    --host=$ARCH-linux \
-	    --disable-dependency-tracking \
-	    --disable-shared \
-	    --enable-static \
-	    --with-pic \
-	    $ADDITIONAL_CONFIGURE_FLAG
 
-	make clean
-	make -j4 install
-	make clean
-	cd ..
-	echo "*******************************************************************************"
-	echo "FINISHED freetype2 for $ARCH"
-	echo "*******************************************************************************"
-}
-function build_ass
-{
-	echo "*******************************************************************************"
-	echo "Starting build ass for $ARCH"
-	echo "*******************************************************************************"
-	cd libass
-	./configure \
-	    --prefix=$PREFIX \
-	    --host=$ARCH-linux \
-	    --disable-fontconfig \
-	    --disable-require-system-font-provider \
-	    --disable-dependency-tracking \
-	    --disable-shared \
-	    --enable-static \
-	    --with-pic \
-	    $ADDITIONAL_CONFIGURE_FLAG
 
-	make clean
-	make V=1 -j4 install
-	make clean
-	cd ..
-	echo "*******************************************************************************"
-	echo "FINISHED ass for $ARCH"
-	echo "*******************************************************************************"
-}
 function build_fribidi
 {
 	echo "*******************************************************************************"
@@ -390,6 +344,7 @@ function build_ffmpeg
 		--disable-w32threads \
 		--disable-os2threads \
 	    --disable-network \
+		--disable-postproc \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
 	make -j4 install
@@ -406,7 +361,7 @@ function build_one {
 	echo "Starting build one for $ARCH"
 	echo "*******************************************************************************"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavcodec -lavfilter -lavformat -lavresample -lavutil -lswresample -lfribidi -lswscale -lvo-aacenc -lvo-amrwbenc -lx264 -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
@@ -429,8 +384,6 @@ build_x264
 build_amr
 build_aac
 build_fribidi
-# build_freetype2
-# build_ass
 build_ffmpeg
 build_one
 
@@ -449,71 +402,29 @@ build_one
 # build_amr
 # build_aac
 # build_fribidi
-# # build_freetype2
-# # build_ass
 # build_ffmpeg
 # build_one
 
-# #mips
-# EABIARCH=mipsel-linux-android
-# ARCH=mips
-# OPTIMIZE_CFLAGS="-EL -march=mips32 -mips32 -mhard-float"
-# PREFIX=$(pwd)/ffmpeg-build/mips
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG="--disable-mips32r2"
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/mipsel-linux-android-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-19
-# setup_paths
-# # build_x264
-# build_amr
-# build_aac
-# build_fribidi
-# build_freetype2
-# build_ass
-# build_ffmpeg
-# build_one
 
 #arm v7vfpv3
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv7-a
-# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
-# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-19
-# setup_paths
-# # build_x264
-# # build_amr
-# # build_aac
-# # build_fribidi
-# # # build_freetype2
-# # # build_ass
-# # build_ffmpeg
-# build_one
+EABIARCH=arm-linux-androideabi
+ARCH=arm
+CPU=armv7-a
+OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
+PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
+OUT_LIBRARY=$PREFIX/libffmpeg.so
+ADDITIONAL_CONFIGURE_FLAG=
+SONAME=libffmpeg.so
+PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-19
+setup_paths
+build_x264
+build_amr
+build_aac
+build_fribidi
+build_ffmpeg
+build_one
 
-# #arm v7 + neon (neon also include vfpv3-32)
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv7-a
-# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=neon -marm -march=$CPU -mtune=cortex-a8 -mthumb -D__thumb__ "
-# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a-neon
-# OUT_LIBRARY=../ffmpeg-build/armeabi-v7a/libffmpeg-neon.so
-# ADDITIONAL_CONFIGURE_FLAG=--enable-neon
-# SONAME=libffmpeg-neon.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-19
-# setup_paths
-# build_amr
-# build_aac
-# build_fribidi
-# build_freetype2
-# build_ass
-# build_ffmpeg
-# build_one
 
 
 echo "BUILD SUCCESS"
