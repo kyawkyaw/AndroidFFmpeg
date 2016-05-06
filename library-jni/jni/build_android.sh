@@ -344,7 +344,7 @@ function build_ffmpeg
 		--disable-w32threads \
 		--disable-os2threads \
 	    --disable-network \
-		--disable-postproc \
+		--enable-postproc \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
 	make -j4 install
@@ -361,7 +361,7 @@ function build_one {
 	echo "Starting build one for $ARCH"
 	echo "*******************************************************************************"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
