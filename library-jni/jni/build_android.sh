@@ -340,10 +340,10 @@ function build_ffmpeg
 	    --enable-filters \
 	    --disable-logging  \
 	    --enable-small  \
-	    --disable-pthreads \
+	    --enable-pthreads \
 		--disable-w32threads \
 		--disable-os2threads \
-	    --disable-network \
+	    --enable-network \
 		--enable-postproc \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
