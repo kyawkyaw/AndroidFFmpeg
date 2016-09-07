@@ -364,7 +364,6 @@ function build_ffmpeg
 	    --enable-nonfree \
 	    --enable-version3 \
 	    --enable-memalign-hack \
-	    --disable-asm \
 	    --enable-filters \
 	    --enable-small  \
 	    --enable-pthreads \
@@ -402,45 +401,49 @@ function build_one {
 }
 
 
-# #arm v6
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv6
-# PLATFORM_ARCH=arch-arm
-# OPTIMIZE_CFLAGS="-marm -march=$CPU"
-# PREFIX=$(pwd)/ffmpeg-build/armeabi
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-9
-# setup_paths
-# build_x264
-# build_amr
-# build_aac
-# build_fribidi
-# build_ffmpeg
-# build_one
+#arm v6
+ANDROID_NDK_HOME=/Data/Library/Android/sdk/ndk-bundle
+COMPILATOR_VERSION=4.9
+EABIARCH=arm-linux-androideabi
+ARCH=arm
+CPU=armv6
+PLATFORM_ARCH=arch-arm
+OPTIMIZE_CFLAGS="-marm -march=$CPU"
+PREFIX=$(pwd)/ffmpeg-build/armeabi
+OUT_LIBRARY=$PREFIX/libffmpeg.so
+ADDITIONAL_CONFIGURE_FLAG=
+SONAME=libffmpeg.so
+PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-9
+setup_paths
+build_x264
+build_amr
+build_aac
+build_fribidi
+build_ffmpeg
+build_one
 
-# #arm v7vfpv3
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv7-a
-# PLATFORM_ARCH=arch-arm
-# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
-# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-5
-# setup_paths
-# build_x264
-# build_amr
-# build_aac
-# build_fribidi
-# build_ffmpeg
-# build_one
+#arm v7vfpv3
+ANDROID_NDK_HOME=/Data/Library/Android/sdk/ndk-bundle
+COMPILATOR_VERSION=4.9
+EABIARCH=arm-linux-androideabi
+ARCH=arm
+CPU=armv7-a
+PLATFORM_ARCH=arch-arm
+OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
+PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
+OUT_LIBRARY=$PREFIX/libffmpeg.so
+ADDITIONAL_CONFIGURE_FLAG=
+SONAME=libffmpeg.so
+PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-9
+setup_paths
+build_x264
+build_amr
+build_aac
+build_fribidi
+build_ffmpeg
+build_one
 
 #x86
 EABIARCH=i686-linux-android
