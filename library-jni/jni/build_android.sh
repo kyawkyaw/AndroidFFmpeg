@@ -17,7 +17,8 @@
 
 # set -x
 
-ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r9d
+ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
+COMPILATOR_VERSION=4.9
 
 if [ "$ANDROID_NDK_HOME" = "" ]; then
 	echo ANDROID_NDK_HOME variable not set, exiting
@@ -54,7 +55,7 @@ echo "Using architecture: $OS_ARCH"
 
 function setup_paths
 {
-	export PLATFORM=$ANDROID_NDK_HOME/platforms/$PLATFORM_VERSION/$PLATFORM_ARCH
+	export PLATFORM=$ANDROID_NDK_HOME/platforms/$PLATFORM_VERSION/$PLATFORM_ARCH/
 	if [ ! -d $PLATFORM ]; then
 		echo $PLATFORM does not exist
 		exit 1
@@ -365,7 +366,6 @@ function build_ffmpeg
 	    --enable-memalign-hack \
 	    --disable-asm \
 	    --enable-filters \
-	    --disable-logging  \
 	    --enable-small  \
 	    --enable-pthreads \
 		--disable-w32threads \
@@ -376,6 +376,8 @@ function build_ffmpeg
 	make clean
 	make -j4 install
 	make clean
+		# --ld=LD \
+	    # --disable-logging  \
 
 	cd ..
 	echo "*******************************************************************************"
@@ -391,8 +393,8 @@ function build_one {
 	echo "echo \"*******************************************************************************\"">> ../export.txt
 	# echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a" >> ../export.txt
 	# ${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
-	echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a" >> ../export.txt
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
+	echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a" >> ../export.txt
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
@@ -400,10 +402,10 @@ function build_one {
 }
 
 
-# #arm v5
+# #arm v6
 # EABIARCH=arm-linux-androideabi
 # ARCH=arm
-# CPU=armv5
+# CPU=armv6
 # PLATFORM_ARCH=arch-arm
 # OPTIMIZE_CFLAGS="-marm -march=$CPU"
 # PREFIX=$(pwd)/ffmpeg-build/armeabi
@@ -411,7 +413,7 @@ function build_one {
 # ADDITIONAL_CONFIGURE_FLAG=
 # SONAME=libffmpeg.so
 # PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-5
+# PLATFORM_VERSION=android-9
 # setup_paths
 # build_x264
 # build_amr
@@ -442,7 +444,6 @@ function build_one {
 
 #x86
 EABIARCH=i686-linux-android
-# ARCH=x86
 CPU=i686
 ARCH=i686
 PLATFORM_ARCH=arch-x86
