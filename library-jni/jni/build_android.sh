@@ -15,7 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -x
+# set -x
+
+ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r9d
 
 if [ "$ANDROID_NDK_HOME" = "" ]; then
 	echo ANDROID_NDK_HOME variable not set, exiting
@@ -52,7 +54,7 @@ echo "Using architecture: $OS_ARCH"
 
 function setup_paths
 {
-	export PLATFORM=$ANDROID_NDK_HOME/platforms/$PLATFORM_VERSION/arch-$ARCH/
+	export PLATFORM=$ANDROID_NDK_HOME/platforms/$PLATFORM_VERSION/$PLATFORM_ARCH
 	if [ ! -d $PLATFORM ]; then
 		echo $PLATFORM does not exist
 		exit 1
@@ -98,6 +100,29 @@ EOF
 		chmod u+x $PKG_CONFIG
 		echo "Because we have local pkg-config we will create it in ${PKG_CONFIG} directory using ${SYS_PKG_CONFIG}"
 	fi
+
+
+	echo "export PATH=${PATH}:$PREBUILT/bin/" > ./export.txt
+	echo "export __PREFIX__=$PREFIX/lib" >> ./export.txt
+	echo "export __PLATFORM__=$PLATFORM" >> ./export.txt
+	echo "export CROSS_COMPILE=$PREBUILT/bin/$EABIARCH-" >> ./export.txt
+	echo "export CFLAGS=$OPTIMIZE_CFLAGS" >> ./export.txt
+	echo "export CPPFLAGS=$CFLAGS" >> ./export.txt
+	echo "export CFLAGS=$CFLAGS" >> ./export.txt
+	echo "export CXXFLAGS=$CFLAGS" >> ./export.txt
+	echo "export CXX=\"${CROSS_COMPILE}g++ --sysroot=$PLATFORM\"" >> ./export.txt
+	echo "export AS=\"${CROSS_COMPILE}gcc --sysroot=$PLATFORM\"" >> ./export.txt
+	echo "export CC=\"${CROSS_COMPILE}gcc --sysroot=$PLATFORM\"" >> ./export.txt
+	echo "export PKG_CONFIG=${CROSS_COMPILE}pkg-config" >> ./export.txt
+	echo "export LD=${CROSS_COMPILE}ld" >> ./export.txt
+	echo "export NM=${CROSS_COMPILE}nm" >> ./export.txt
+	echo "export STRIP=${CROSS_COMPILE}strip" >> ./export.txt
+	echo "export RANLIB=${CROSS_COMPILE}ranlib" >> ./export.txt
+	echo "export AR=${CROSS_COMPILE}ar" >> ./export.txt
+	echo "export LDFLAGS=\"-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -nostdlib -lc -lm -ldl -llog -lgcc\"" >> ./export.txt
+	echo "export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig/" >> ./export.txt
+	echo "export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/" >> ./export.txt
+
 }
 
 function build_x264
@@ -108,9 +133,10 @@ function build_x264
 	cd x264
 	./configure \
 		--prefix=$PREFIX \
-		--host=$ARCH-linux \
+		--host=$ARCH-linux-android \
 		--disable-asm \
 	    --enable-static \
+	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -lgcc -L$PREFIX/lib" \
 		$ADDITIONAL_CONFIGURE_FLAG
 
 	make clean
@@ -130,7 +156,7 @@ function build_amr
 	cd vo-amrwbenc
 	./configure \
 	    --prefix=$PREFIX \
-	    --host=$ARCH-linux \
+	    --host=$ARCH-linux-android \
 	    --disable-dependency-tracking \
 	    --disable-shared \
 	    --enable-static \
@@ -154,7 +180,7 @@ function build_aac
 	cd vo-aacenc
 	./configure \
 	    --prefix=$PREFIX \
-	    --host=$ARCH-linux \
+	    --host=$ARCH-linux-android \
 	    --disable-dependency-tracking \
 	    --disable-shared \
 	    --enable-static \
@@ -179,7 +205,7 @@ function build_fribidi
 	cd fribidi
 	./configure \
 	    --prefix=$PREFIX \
-	    --host=$ARCH-linux \
+	    --host=$ARCH-linux-android \
 	    --disable-bin \
 	    --disable-dependency-tracking \
 	    --disable-shared \
@@ -217,6 +243,7 @@ function build_ffmpeg
 	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -L$PREFIX/lib" \
 	    --extra-cflags="-I$PREFIX/include" \
 	    --disable-everything \
+	    --disable-pixelutils \
 	    --enable-libvo-amrwbenc \
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_dxva2 \
@@ -336,14 +363,14 @@ function build_ffmpeg
 	    --enable-nonfree \
 	    --enable-version3 \
 	    --enable-memalign-hack \
-	    --enable-asm \
+	    --disable-asm \
 	    --enable-filters \
 	    --disable-logging  \
 	    --enable-small  \
 	    --enable-pthreads \
 		--disable-w32threads \
 		--disable-os2threads \
-	    --enable-network \
+	    --disable-network \
 		--enable-postproc \
 	    $ADDITIONAL_CONFIGURE_FLAG
 	make clean
@@ -361,62 +388,71 @@ function build_one {
 	echo "Starting build one for $ARCH"
 	echo "*******************************************************************************"
 	cd ffmpeg
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib  -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
+	echo "echo \"*******************************************************************************\"">> ../export.txt
+	# echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a" >> ../export.txt
+	# ${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
+	echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a" >> ../export.txt
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
 	echo "*******************************************************************************"
 }
 
-#arm v5
-EABIARCH=arm-linux-androideabi
-ARCH=arm
-CPU=armv5
-OPTIMIZE_CFLAGS="-marm -march=$CPU"
-PREFIX=$(pwd)/ffmpeg-build/armeabi
-OUT_LIBRARY=$PREFIX/libffmpeg.so
-ADDITIONAL_CONFIGURE_FLAG=
-SONAME=libffmpeg.so
-PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-19
-setup_paths
-build_x264
-build_amr
-build_aac
-build_fribidi
-build_ffmpeg
-build_one
 
-# #x86
-# EABIARCH=i686-linux-android
-# ARCH=x86
-# OPTIMIZE_CFLAGS="-m32"
-# PREFIX=$(pwd)/ffmpeg-build/x86
+# #arm v5
+# EABIARCH=arm-linux-androideabi
+# ARCH=arm
+# CPU=armv5
+# PLATFORM_ARCH=arch-arm
+# OPTIMIZE_CFLAGS="-marm -march=$CPU"
+# PREFIX=$(pwd)/ffmpeg-build/armeabi
 # OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=--disable-asm
+# ADDITIONAL_CONFIGURE_FLAG=
 # SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/x86-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-19
+# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+# PLATFORM_VERSION=android-5
 # setup_paths
-# # build_x264
+# build_x264
 # build_amr
 # build_aac
 # build_fribidi
 # build_ffmpeg
 # build_one
 
+# #arm v7vfpv3
+# EABIARCH=arm-linux-androideabi
+# ARCH=arm
+# CPU=armv7-a
+# PLATFORM_ARCH=arch-arm
+# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
+# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
+# OUT_LIBRARY=$PREFIX/libffmpeg.so
+# ADDITIONAL_CONFIGURE_FLAG=
+# SONAME=libffmpeg.so
+# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+# PLATFORM_VERSION=android-5
+# setup_paths
+# build_x264
+# build_amr
+# build_aac
+# build_fribidi
+# build_ffmpeg
+# build_one
 
-#arm v7vfpv3
-EABIARCH=arm-linux-androideabi
-ARCH=arm
-CPU=armv7-a
-OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
-PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
+#x86
+EABIARCH=i686-linux-android
+# ARCH=x86
+CPU=i686
+ARCH=i686
+PLATFORM_ARCH=arch-x86
+OPTIMIZE_CFLAGS="-m32"
+PREFIX=$(pwd)/ffmpeg-build/x86
 OUT_LIBRARY=$PREFIX/libffmpeg.so
-ADDITIONAL_CONFIGURE_FLAG=
+ADDITIONAL_CONFIGURE_FLAG=--disable-asm
 SONAME=libffmpeg.so
-PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-PLATFORM_VERSION=android-19
+PREBUILT=$ANDROID_NDK_HOME/toolchains/x86-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-9
 setup_paths
 build_x264
 build_amr
@@ -424,7 +460,6 @@ build_aac
 build_fribidi
 build_ffmpeg
 build_one
-
 
 
 echo "BUILD SUCCESS"
