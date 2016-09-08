@@ -17,8 +17,8 @@
 
 # set -x
 
-ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
-COMPILATOR_VERSION=4.9
+# ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
+# COMPILATOR_VERSION=4.9
 
 if [ "$ANDROID_NDK_HOME" = "" ]; then
 	echo ANDROID_NDK_HOME variable not set, exiting
@@ -134,7 +134,7 @@ function build_x264
 	cd x264
 	./configure \
 		--prefix=$PREFIX \
-		--host=$ARCH-linux-android \
+		--host=$ARCH-linux \
 		--disable-asm \
 	    --enable-static \
 	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -lgcc -L$PREFIX/lib" \
@@ -152,12 +152,12 @@ function build_x264
 function build_amr
 {
 	echo "*******************************************************************************"
-	echo "Starting build amr for $ARCH"
+	echo "Starting build vo-amrwbenc for $ARCH"
 	echo "*******************************************************************************"
 	cd vo-amrwbenc
 	./configure \
 	    --prefix=$PREFIX \
-	    --host=$ARCH-linux-android \
+	    --host=$ARCH-linux \
 	    --disable-dependency-tracking \
 	    --disable-shared \
 	    --enable-static \
@@ -169,14 +169,14 @@ function build_amr
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED amr for $ARCH"
+	echo "FINISHED vo-amrwbenc for $ARCH"
 	echo "*******************************************************************************"
 }
 
 function build_aac
 {
 	echo "*******************************************************************************"
-	echo "Starting build aac for $ARCH"
+	echo "Starting build vo-aacenc for $ARCH"
 	echo "*******************************************************************************"
 	cd vo-aacenc
 	./configure \
@@ -193,35 +193,11 @@ function build_aac
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED aac for $ARCH"
+	echo "FINISHED vo-aacenc for $ARCH"
 	echo "*******************************************************************************"
 }
 
 
-function build_fribidi
-{
-	echo "*******************************************************************************"
-	echo "Starting build fribidi for $ARCH"
-	echo "*******************************************************************************"
-	cd fribidi
-	./configure \
-	    --prefix=$PREFIX \
-	    --host=$ARCH-linux-android \
-	    --disable-bin \
-	    --disable-dependency-tracking \
-	    --disable-shared \
-	    --enable-static \
-	    --with-pic \
-	    $ADDITIONAL_CONFIGURE_FLAG
-
-	make clean
-	make -j4 install
-	make clean
-	cd ..
-	echo "*******************************************************************************"
-	echo "FINISHED fribidi for $ARCH"
-	echo "*******************************************************************************"
-}
 function build_ffmpeg
 {
 	echo "*******************************************************************************"
@@ -392,8 +368,8 @@ function build_one {
 	echo "echo \"*******************************************************************************\"">> ../export.txt
 	# echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a" >> ../export.txt
 	# ${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION.x/libgcc.a
-	echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a" >> ../export.txt
-	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lfribidi -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
+	echo "${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a" >> ../export.txt
+	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
 	echo "FINISHED one for $ARCH"
@@ -402,7 +378,8 @@ function build_one {
 
 
 #arm v6
-ANDROID_NDK_HOME=/Data/Library/Android/sdk/ndk-bundle
+# ANDROID_NDK_HOME=/Data/Library/Android/sdk/ndk-bundle
+ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
 COMPILATOR_VERSION=4.9
 EABIARCH=arm-linux-androideabi
 ARCH=arm
@@ -419,7 +396,6 @@ setup_paths
 build_x264
 build_amr
 build_aac
-build_fribidi
 build_ffmpeg
 build_one
 
@@ -441,14 +417,15 @@ setup_paths
 build_x264
 build_amr
 build_aac
-build_fribidi
 build_ffmpeg
 build_one
 
 #x86
+ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
+COMPILATOR_VERSION=4.9
 EABIARCH=i686-linux-android
-CPU=i686
 ARCH=i686
+CPU=i686
 PLATFORM_ARCH=arch-x86
 OPTIMIZE_CFLAGS="-m32"
 PREFIX=$(pwd)/ffmpeg-build/x86
@@ -461,7 +438,6 @@ setup_paths
 build_x264
 build_amr
 build_aac
-build_fribidi
 build_ffmpeg
 build_one
 
