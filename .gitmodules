@@ -10,12 +10,3 @@
 [submodule "library-jni/jni/x264"]
 	path = library-jni/jni/x264
 	url = git://git.videolan.org/x264.git
-[submodule "library-jni/jni/tropicssl"]
-	path = library-jni/jni/tropicssl
-	url = https://github.com/appunite/tropicssl.git
-[submodule "library-jni/jni/fribidi"]
-	path = library-jni/jni/fribidi
-	url = https://github.com/appunite/fribidi.git
-[submodule "library-jni/jni/libyuv"]
-	path = library-jni/jni/libyuv
-	url = https://chromium.googlesource.com/external/libyuv
