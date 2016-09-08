@@ -17,8 +17,14 @@
 
 # set -x
 
-# ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
-# COMPILATOR_VERSION=4.9
+# # Tested submodule commits
+#  677ea4a49b2e7e9ee28fb5e62f9aec73d7acb272 ffmpeg (n3.1.3-2-g677ea4a)
+#  2418ead75aa9cdaf01cb4286f38fb7be2d48bd8d vo-aacenc (v0.1.3-5-g2418ead)
+#  3b3fcd0d250948e74cd67e7ea81af431ab3928f9 vo-amrwbenc (v0.1.3-5-g3b3fcd0)
+#  3f5ed56d4105f68c01b86f94f41bb9bbefa3433b x264 (heads/master)
+
+ANDROID_NDK_HOME=/Volumes/KyawKyaw/Data/Library/Android/android-ndk-r10e
+COMPILATOR_VERSION=4.9
 
 if [ "$ANDROID_NDK_HOME" = "" ]; then
 	echo ANDROID_NDK_HOME variable not set, exiting
@@ -61,6 +67,7 @@ function setup_paths
 		exit 1
 	fi
 	echo "Using platform: $PLATFORM"
+	find . -iname '*.o' -exec rm {} \;
 	export PATH=${PATH}:$PREBUILT/bin/
 	export CROSS_COMPILE=$PREBUILT/bin/$EABIARCH-
 	export CFLAGS=$OPTIMIZE_CFLAGS
@@ -129,12 +136,12 @@ EOF
 function build_x264
 {
 	echo "*******************************************************************************"
-	echo "Starting build x264 for $ARCH"
+	echo "Starting build x264 for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd x264
 	./configure \
 		--prefix=$PREFIX \
-		--host=$ARCH-linux \
+		--host=$ARCH-linux-android \
 		--disable-asm \
 	    --enable-static \
 	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -lgcc -L$PREFIX/lib" \
@@ -145,19 +152,19 @@ function build_x264
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED x264 for $ARCH"
+	echo "FINISHED x264 for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 function build_amr
 {
 	echo "*******************************************************************************"
-	echo "Starting build vo-amrwbenc for $ARCH"
+	echo "Starting build vo-amrwbenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd vo-amrwbenc
 	./configure \
 	    --prefix=$PREFIX \
-	    --host=$ARCH-linux \
+	    --host=$ARCH-linux-android \
 	    --disable-dependency-tracking \
 	    --disable-shared \
 	    --enable-static \
@@ -169,14 +176,14 @@ function build_amr
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED vo-amrwbenc for $ARCH"
+	echo "FINISHED vo-amrwbenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 function build_aac
 {
 	echo "*******************************************************************************"
-	echo "Starting build vo-aacenc for $ARCH"
+	echo "Starting build vo-aacenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd vo-aacenc
 	./configure \
@@ -193,7 +200,7 @@ function build_aac
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED vo-aacenc for $ARCH"
+	echo "FINISHED vo-aacenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
@@ -201,7 +208,7 @@ function build_aac
 function build_ffmpeg
 {
 	echo "*******************************************************************************"
-	echo "Starting build ffmpeg for $ARCH"
+	echo "Starting build ffmpeg for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd ffmpeg
 	./configure --target-os=linux \
@@ -220,7 +227,6 @@ function build_ffmpeg
 	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -L$PREFIX/lib" \
 	    --extra-cflags="-I$PREFIX/include" \
 	    --disable-everything \
-	    --disable-pixelutils \
 	    --enable-libvo-amrwbenc \
 	    --enable-hwaccel=h264_vaapi \
 	    --enable-hwaccel=h264_dxva2 \
@@ -340,6 +346,7 @@ function build_ffmpeg
 	    --enable-nonfree \
 	    --enable-version3 \
 	    --enable-memalign-hack \
+	    --disable-asm \
 	    --enable-filters \
 	    --enable-small  \
 	    --enable-pthreads \
@@ -353,16 +360,17 @@ function build_ffmpeg
 	make clean
 		# --ld=LD \
 	    # --disable-logging  \
+	    # --disable-pixelutils \
 
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED ffmpeg for $ARCH"
+	echo "FINISHED ffmpeg for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 function build_one {
 	echo "*******************************************************************************"
-	echo "Starting build one for $ARCH"
+	echo "Starting build one for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd ffmpeg
 	echo "echo \"*******************************************************************************\"">> ../export.txt
@@ -372,18 +380,16 @@ function build_one {
 	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED one for $ARCH"
+	echo "FINISHED one for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 
-#arm v6
-# ANDROID_NDK_HOME=/Data/Library/Android/sdk/ndk-bundle
-ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
-COMPILATOR_VERSION=4.9
+
+#arm v5
 EABIARCH=arm-linux-androideabi
 ARCH=arm
-CPU=armv6
+CPU=armv5
 PLATFORM_ARCH=arch-arm
 OPTIMIZE_CFLAGS="-marm -march=$CPU"
 PREFIX=$(pwd)/ffmpeg-build/armeabi
@@ -400,8 +406,6 @@ build_ffmpeg
 build_one
 
 #arm v7vfpv3
-ANDROID_NDK_HOME=/Data/Library/Android/sdk/ndk-bundle
-COMPILATOR_VERSION=4.9
 EABIARCH=arm-linux-androideabi
 ARCH=arm
 CPU=armv7-a
@@ -421,8 +425,6 @@ build_ffmpeg
 build_one
 
 #x86
-ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
-COMPILATOR_VERSION=4.9
 EABIARCH=i686-linux-android
 ARCH=i686
 CPU=i686
