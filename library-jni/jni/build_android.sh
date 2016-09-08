@@ -129,7 +129,7 @@ EOF
 function build_x264
 {
 	echo "*******************************************************************************"
-	echo "Starting build x264 for $ARCH"
+	echo "Starting build x264 for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd x264
 	./configure \
@@ -145,14 +145,14 @@ function build_x264
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED x264 for $ARCH"
+	echo "FINISHED x264 for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 function build_amr
 {
 	echo "*******************************************************************************"
-	echo "Starting build amr for $ARCH"
+	echo "Starting build vo-amrwbenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd vo-amrwbenc
 	./configure \
@@ -169,14 +169,14 @@ function build_amr
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED amr for $ARCH"
+	echo "FINISHED vo-amrwbenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 function build_aac
 {
 	echo "*******************************************************************************"
-	echo "Starting build aac for $ARCH"
+	echo "Starting build vo-aacenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd vo-aacenc
 	./configure \
@@ -193,7 +193,7 @@ function build_aac
 	make clean
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED aac for $ARCH"
+	echo "FINISHED vo-aacenc for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
@@ -201,7 +201,7 @@ function build_aac
 function build_ffmpeg
 {
 	echo "*******************************************************************************"
-	echo "Starting build ffmpeg for $ARCH"
+	echo "Starting build ffmpeg for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd ffmpeg
 	./configure --target-os=linux \
@@ -357,13 +357,13 @@ function build_ffmpeg
 
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED ffmpeg for $ARCH"
+	echo "FINISHED ffmpeg for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 function build_one {
 	echo "*******************************************************************************"
-	echo "Starting build one for $ARCH"
+	echo "Starting build one for $ARCH $CPU"
 	echo "*******************************************************************************"
 	cd ffmpeg
 	echo "echo \"*******************************************************************************\"">> ../export.txt
@@ -373,15 +373,16 @@ function build_one {
 	${LD} -rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib -L$PREFIX/lib -soname $SONAME -shared -nostdlib -Bsymbolic --whole-archive --no-undefined -o $OUT_LIBRARY -lavformat -lavcodec -lx264 -lavfilter -lavutil -lswscale -lswresample -lavresample -lvo-aacenc -lvo-amrwbenc -lpostproc -lc -lm -lz -ldl -llog --dynamic-linker=/system/bin/linker -zmuldefs $PREBUILT/lib/gcc/$EABIARCH/$COMPILATOR_VERSION/libgcc.a
 	cd ..
 	echo "*******************************************************************************"
-	echo "FINISHED one for $ARCH"
+	echo "FINISHED one for $ARCH $CPU"
 	echo "*******************************************************************************"
 }
 
 
-# #arm v6
+
+# #arm v5
 # EABIARCH=arm-linux-androideabi
 # ARCH=arm
-# CPU=armv6
+# CPU=armv5
 # PLATFORM_ARCH=arch-arm
 # OPTIMIZE_CFLAGS="-marm -march=$CPU"
 # PREFIX=$(pwd)/ffmpeg-build/armeabi
@@ -394,7 +395,6 @@ function build_one {
 # build_x264
 # build_amr
 # build_aac
-# build_fribidi
 # build_ffmpeg
 # build_one
 
@@ -409,19 +409,18 @@ function build_one {
 # ADDITIONAL_CONFIGURE_FLAG=
 # SONAME=libffmpeg.so
 # PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-5
+# PLATFORM_VERSION=android-9
 # setup_paths
 # build_x264
 # build_amr
 # build_aac
-# build_fribidi
 # build_ffmpeg
 # build_one
 
 #x86
 EABIARCH=i686-linux-android
-CPU=i686
 ARCH=i686
+CPU=i686
 PLATFORM_ARCH=arch-x86
 OPTIMIZE_CFLAGS="-m32"
 PREFIX=$(pwd)/ffmpeg-build/x86
@@ -434,7 +433,6 @@ setup_paths
 build_x264
 build_amr
 build_aac
-#build_fribidi
 build_ffmpeg
 build_one
 
