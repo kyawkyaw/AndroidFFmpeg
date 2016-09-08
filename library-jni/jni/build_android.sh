@@ -17,7 +17,7 @@
 
 # set -x
 
-ANDROID_NDK_HOME=/Data/Library/Android/android-ndk-r10e
+ANDROID_NDK_HOME=/Volumes/KyawKyaw/Data/Library/Android/android-ndk-r10e
 COMPILATOR_VERSION=4.9
 
 if [ "$ANDROID_NDK_HOME" = "" ]; then
@@ -205,150 +205,150 @@ function build_ffmpeg
 	echo "*******************************************************************************"
 	cd ffmpeg
 	./configure --target-os=linux \
-	    --prefix=$PREFIX \
-	    --enable-cross-compile \
-	    --extra-libs="-lgcc" \
-	    --arch=$ARCH \
-	    --cc=$CC \
-	    --cross-prefix=$CROSS_COMPILE \
-	    --nm=$NM \
-	    --sysroot=$PLATFORM \
-	    --extra-cflags=" -O3 -fpic -DANDROID -DHAVE_SYS_UIO_H=1 -Dipv6mr_interface=ipv6mr_ifindex -fasm -Wno-psabi -fno-short-enums  -fno-strict-aliasing -finline-limit=300 $OPTIMIZE_CFLAGS " \
-	    --disable-shared \
-	    --enable-static \
-	    --enable-runtime-cpudetect \
-	    --extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -L$PREFIX/lib" \
-	    --extra-cflags="-I$PREFIX/include" \
-	    --disable-everything \
-	    --disable-pixelutils \
-	    --enable-libvo-amrwbenc \
-	    --enable-hwaccel=h264_vaapi \
-	    --enable-hwaccel=h264_dxva2 \
-	    --enable-hwaccel=mpeg4_vaapi \
-        --enable-demuxer=aac \
-        --enable-demuxer=ac3 \
-        --enable-demuxer=ape \
-        --enable-demuxer=asf \
-        --enable-demuxer=flac \
-        --enable-demuxer=mp3 \
-        --enable-demuxer=mpc \
-        --enable-demuxer=mpc8 \
-        --enable-demuxer=ogg \
-        --enable-demuxer=tta \
-        --enable-demuxer=wav \
-        --enable-demuxer=wv \
-	    --enable-demuxer=mov \
-	    --enable-demuxer=h264 \
-	    --enable-demuxer=mpegvideo \
-	    --enable-demuxer=h263 \
-	    --enable-demuxer=mpegps \
-	    --enable-demuxer=mjpeg \
-	    --enable-demuxer=rtsp \
-	    --enable-demuxer=rtp \
-	    --enable-demuxer=hls \
-	    --enable-demuxer=matroska \
-	    --enable-muxer=rtsp \
-	    --enable-muxer=mp4 \
-	    --enable-muxer=mov \
-	    --enable-muxer=mjpeg \
-	    --enable-muxer=matroska \
-	    --enable-protocol=crypto \
-	    --enable-protocol=file \
-	    --enable-protocol=rtp \
-	    --enable-protocol=tcp \
-	    --enable-protocol=udp \
-	    --enable-protocol=hls \
-	    --enable-protocol=http \
-	    --enable-decoder=xsub \
-	    --enable-decoder=jacosub \
-	    --enable-decoder=dvdsub \
-	    --enable-decoder=dvbsub \
-	    --enable-decoder=subviewer \
-	    --enable-decoder=rawvideo \
-	    --enable-encoder=rawvideo \
-	    --enable-decoder=mjpeg \
-	    --enable-encoder=mjpeg \
-	    --enable-decoder=h263 \
-	    --enable-decoder=mpeg4 \
-	    --enable-encoder=mpeg4 \
-	    --enable-decoder=h264 \
-	    --enable-gpl \
-	    --enable-libx264 \
-	    --enable-decoder=aac \
-	    --enable-encoder=aac \
-	    --enable-parser=h264 \
-	    --enable-encoder=mp2 \
-	    --enable-decoder=mp2 \
-        --enable-decoder=aac \
-        --enable-decoder=ac3 \
-        --enable-decoder=alac \
-        --enable-decoder=ape \
-        --enable-decoder=flac \
-        --enable-decoder=mp1 \
-        --enable-decoder=mp2 \
-        --enable-decoder=mp3 \
-        --enable-decoder=mpc7 \
-        --enable-decoder=mpc8 \
-        --enable-decoder=tta \
-        --enable-decoder=vorbis \
-        --enable-decoder=wavpack \
-        --enable-decoder=wmav1 \
-        --enable-decoder=wmav2 \
-        --enable-decoder=pcm_alaw \
-        --enable-decoder=pcm_dvd \
-        --enable-decoder=pcm_f32be \
-        --enable-decoder=pcm_f32le \
-        --enable-decoder=pcm_f64be \
-        --enable-decoder=pcm_f64le \
-        --enable-decoder=pcm_s16be \
-        --enable-decoder=pcm_s16le \
-        --enable-decoder=pcm_s16le_planar \
-        --enable-decoder=pcm_s24be \
-        --enable-decoder=pcm_s24le \
-        --enable-decoder=pcm_s32be \
-        --enable-decoder=pcm_s32le \
-        --enable-decoder=pcm_s8 \
-        --enable-encoder=pcm_s8 \
-        --enable-decoder=pcm_u16be \
-        --enable-encoder=pcm_u16be \
-        --enable-decoder=pcm_u16le \
-        --enable-encoder=pcm_u16le \
-        --enable-decoder=pcm_u24be \
-        --enable-decoder=pcm_u24le \
-	    --enable-encoder=libvo_amrwbenc \
-	    --enable-decoder=amrwb \
-	    --enable-muxer=mp2 \
-	    --enable-muxer=mp3 \
-	    --enable-bsfs \
-	    --enable-decoders \
-	    --enable-encoders \
-	    --enable-parsers \
-	    --enable-hwaccels \
-	    --enable-muxers \
-	    --enable-avformat \
-	    --enable-avfilter \
-	    --enable-avcodec \
-	    --enable-avresample \
-	    --enable-zlib \
-	    --disable-doc \
-	    --disable-programs \
-	    --enable-ffmpeg \
-	    --disable-ffplay \
-	    --disable-ffprobe \
-	    --disable-ffserver \
-	    --disable-avdevice \
-	    --enable-nonfree \
-	    --enable-version3 \
-	    --enable-memalign-hack \
-	    --disable-asm \
-	    --enable-filters \
-	    --enable-small  \
-	    --enable-pthreads \
+		--prefix=$PREFIX \
+		--enable-cross-compile \
+		--extra-libs="-lgcc" \
+		--arch=$ARCH \
+		--cc=$CC \
+		--cross-prefix=$CROSS_COMPILE \
+		--nm=$NM \
+		--sysroot=$PLATFORM \
+		--extra-cflags=" -O3 -fpic -DANDROID -DHAVE_SYS_UIO_H=1 -Dipv6mr_interface=ipv6mr_ifindex -fasm -Wno-psabi -fno-short-enums  -fno-strict-aliasing -finline-limit=300 $OPTIMIZE_CFLAGS " \
+		--disable-shared \
+		--enable-static \
+		--enable-runtime-cpudetect \
+		--extra-ldflags="-Wl,-rpath-link=$PLATFORM/usr/lib -L$PLATFORM/usr/lib  -nostdlib -lc -lm -ldl -llog -L$PREFIX/lib" \
+		--extra-cflags="-I$PREFIX/include" \
+		--disable-everything \
+		--disable-pixelutils \
+		--enable-libvo-amrwbenc \
+		--enable-hwaccel=h264_vaapi \
+		--enable-hwaccel=h264_dxva2 \
+		--enable-hwaccel=mpeg4_vaapi \
+		--enable-demuxer=aac \
+		--enable-demuxer=ac3 \
+		--enable-demuxer=ape \
+		--enable-demuxer=asf \
+		--enable-demuxer=flac \
+		--enable-demuxer=mp3 \
+		--enable-demuxer=mpc \
+		--enable-demuxer=mpc8 \
+		--enable-demuxer=ogg \
+		--enable-demuxer=tta \
+		--enable-demuxer=wav \
+		--enable-demuxer=wv \
+		--enable-demuxer=mov \
+		--enable-demuxer=h264 \
+		--enable-demuxer=mpegvideo \
+		--enable-demuxer=h263 \
+		--enable-demuxer=mpegps \
+		--enable-demuxer=mjpeg \
+		--enable-demuxer=rtsp \
+		--enable-demuxer=rtp \
+		--enable-demuxer=hls \
+		--enable-demuxer=matroska \
+		--enable-muxer=rtsp \
+		--enable-muxer=mp4 \
+		--enable-muxer=mov \
+		--enable-muxer=mjpeg \
+		--enable-muxer=matroska \
+		--enable-protocol=crypto \
+		--enable-protocol=file \
+		--enable-protocol=rtp \
+		--enable-protocol=tcp \
+		--enable-protocol=udp \
+		--enable-protocol=hls \
+		--enable-protocol=http \
+		--enable-decoder=xsub \
+		--enable-decoder=jacosub \
+		--enable-decoder=dvdsub \
+		--enable-decoder=dvbsub \
+		--enable-decoder=subviewer \
+		--enable-decoder=rawvideo \
+		--enable-encoder=rawvideo \
+		--enable-decoder=mjpeg \
+		--enable-encoder=mjpeg \
+		--enable-decoder=h263 \
+		--enable-decoder=mpeg4 \
+		--enable-encoder=mpeg4 \
+		--enable-decoder=h264 \
+		--enable-gpl \
+		--enable-libx264 \
+		--enable-decoder=aac \
+		--enable-encoder=aac \
+		--enable-parser=h264 \
+		--enable-encoder=mp2 \
+		--enable-decoder=mp2 \
+		--enable-decoder=aac \
+		--enable-decoder=ac3 \
+		--enable-decoder=alac \
+		--enable-decoder=ape \
+		--enable-decoder=flac \
+		--enable-decoder=mp1 \
+		--enable-decoder=mp2 \
+		--enable-decoder=mp3 \
+		--enable-decoder=mpc7 \
+		--enable-decoder=mpc8 \
+		--enable-decoder=tta \
+		--enable-decoder=vorbis \
+		--enable-decoder=wavpack \
+		--enable-decoder=wmav1 \
+		--enable-decoder=wmav2 \
+		--enable-decoder=pcm_alaw \
+		--enable-decoder=pcm_dvd \
+		--enable-decoder=pcm_f32be \
+		--enable-decoder=pcm_f32le \
+		--enable-decoder=pcm_f64be \
+		--enable-decoder=pcm_f64le \
+		--enable-decoder=pcm_s16be \
+		--enable-decoder=pcm_s16le \
+		--enable-decoder=pcm_s16le_planar \
+		--enable-decoder=pcm_s24be \
+		--enable-decoder=pcm_s24le \
+		--enable-decoder=pcm_s32be \
+		--enable-decoder=pcm_s32le \
+		--enable-decoder=pcm_s8 \
+		--enable-encoder=pcm_s8 \
+		--enable-decoder=pcm_u16be \
+		--enable-encoder=pcm_u16be \
+		--enable-decoder=pcm_u16le \
+		--enable-encoder=pcm_u16le \
+		--enable-decoder=pcm_u24be \
+		--enable-decoder=pcm_u24le \
+		--enable-encoder=libvo_amrwbenc \
+		--enable-decoder=amrwb \
+		--enable-muxer=mp2 \
+		--enable-muxer=mp3 \
+		--enable-bsfs \
+		--enable-decoders \
+		--enable-encoders \
+		--enable-parsers \
+		--enable-hwaccels \
+		--enable-muxers \
+		--enable-avformat \
+		--enable-avfilter \
+		--enable-avcodec \
+		--enable-avresample \
+		--enable-zlib \
+		--disable-doc \
+		--disable-programs \
+		--enable-ffmpeg \
+		--disable-ffplay \
+		--disable-ffprobe \
+		--disable-ffserver \
+		--disable-avdevice \
+		--enable-nonfree \
+		--enable-version3 \
+		--enable-memalign-hack \
+		--disable-asm \
+		--enable-filters \
+		--enable-small  \
+		--enable-pthreads \
 		--disable-w32threads \
 		--disable-os2threads \
-	    --disable-network \
+		--disable-network \
 		--enable-postproc \
-	    $ADDITIONAL_CONFIGURE_FLAG
+		$ADDITIONAL_CONFIGURE_FLAG
 	make clean
 	make -j4 install
 	make clean
@@ -379,43 +379,43 @@ function build_one {
 
 
 
-# #arm v5
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv5
-# PLATFORM_ARCH=arch-arm
-# OPTIMIZE_CFLAGS="-marm -march=$CPU"
-# PREFIX=$(pwd)/ffmpeg-build/armeabi
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-9
-# setup_paths
-# build_x264
-# build_amr
-# build_aac
-# build_ffmpeg
-# build_one
+#arm v5
+EABIARCH=arm-linux-androideabi
+ARCH=arm
+CPU=armv5
+PLATFORM_ARCH=arch-arm
+OPTIMIZE_CFLAGS="-marm -march=$CPU"
+PREFIX=$(pwd)/ffmpeg-build/armeabi
+OUT_LIBRARY=$PREFIX/libffmpeg.so
+ADDITIONAL_CONFIGURE_FLAG=
+SONAME=libffmpeg.so
+PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-9
+setup_paths
+build_x264
+build_amr
+build_aac
+build_ffmpeg
+build_one
 
-# #arm v7vfpv3
-# EABIARCH=arm-linux-androideabi
-# ARCH=arm
-# CPU=armv7-a
-# PLATFORM_ARCH=arch-arm
-# OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
-# PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
-# OUT_LIBRARY=$PREFIX/libffmpeg.so
-# ADDITIONAL_CONFIGURE_FLAG=
-# SONAME=libffmpeg.so
-# PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
-# PLATFORM_VERSION=android-9
-# setup_paths
-# build_x264
-# build_amr
-# build_aac
-# build_ffmpeg
-# build_one
+#arm v7vfpv3
+EABIARCH=arm-linux-androideabi
+ARCH=arm
+CPU=armv7-a
+PLATFORM_ARCH=arch-arm
+OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=$CPU "
+PREFIX=$(pwd)/ffmpeg-build/armeabi-v7a
+OUT_LIBRARY=$PREFIX/libffmpeg.so
+ADDITIONAL_CONFIGURE_FLAG=
+SONAME=libffmpeg.so
+PREBUILT=$ANDROID_NDK_HOME/toolchains/arm-linux-androideabi-$COMPILATOR_VERSION/prebuilt/$OS_ARCH
+PLATFORM_VERSION=android-9
+setup_paths
+build_x264
+build_amr
+build_aac
+build_ffmpeg
+build_one
 
 #x86
 EABIARCH=i686-linux-android
